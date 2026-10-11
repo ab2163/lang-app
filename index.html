@@ -38,6 +38,12 @@
   .hidden-answer .word, .hidden-answer .forms { filter:blur(7px); user-select:none; }
   article.revealed .word, article.revealed .forms { filter:none; }
   .hint { color:var(--muted); font-size:12px; margin-top:8px; }
+  .num { display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:22px; margin-right:8px; padding:0 7px; border-radius:999px; background:#243246; color:white; font-size:12px; font-weight:700; letter-spacing:0; vertical-align:3px; }
+  .range { display:none; align-items:center; gap:8px; margin-top:10px; }
+  .range.on { display:flex; }
+  .range label { color:var(--muted); font-size:13px; font-weight:600; }
+  .range input { width:88px; border:1px solid var(--line); background:white; border-radius:10px; font-size:16px; padding:8px 10px; color:var(--ink); outline:none; }
+  .range input:focus { border-color:var(--de); }
   @media (min-width:720px) { .forms { grid-template-columns:1fr 1fr; } }
 </style>
 </head>
@@ -56,6 +62,13 @@
   <div class="row">
     <button class="toggle" id="verbs">Verbs only</button>
     <button class="toggle" id="hide">Hide answers</button>
+    <button class="toggle" id="rangeBtn">Range</button>
+  </div>
+  <div class="range" id="range">
+    <label for="fromN">From</label>
+    <input id="fromN" type="number" min="1" max="1000" value="1" inputmode="numeric">
+    <label for="toN">to</label>
+    <input id="toN" type="number" min="1" max="1000" value="1000" inputmode="numeric">
   </div>
 </header>
 <main>
@@ -67,8 +80,11 @@ const WORDS = [{"en": "mother", "de": "die Mutter (-, ¨)", "hi": "maa(n) (F) ma
 const list = document.getElementById("list");
 const count = document.getElementById("count");
 const q = document.getElementById("q");
-let lang = "es", verbsOnly = false, hide = false;
+let lang = "es", verbsOnly = false, hide = false, useRange = false;
 const labels = {es:"Spanish", pt:"Portuguese", de:"German", hi:"Hindi"};
+WORDS.forEach((w, i) => w.n = i + 1);
+const fromN = document.getElementById("fromN");
+const toN = document.getElementById("toN");
 function forms(w, code) {
   const doing = w[code + "_do"], you = w[code + "_you"];
   if (!doing && !you) return "";
@@ -77,16 +93,30 @@ function forms(w, code) {
 function block(w, code) {
   return `<div class="lang"><div class="label ${code}">${labels[code]}</div><div class="word">${w[code] || "—"}</div>${forms(w, code)}</div>`;
 }
+function bounds() {
+  let a = parseInt(fromN.value, 10);
+  let b = parseInt(toN.value, 10);
+  if (!Number.isFinite(a)) a = 1;
+  if (!Number.isFinite(b)) b = WORDS.length;
+  a = Math.min(Math.max(a, 1), WORDS.length);
+  b = Math.min(Math.max(b, 1), WORDS.length);
+  if (a > b) [a, b] = [b, a];
+  return [a, b];
+}
 function render() {
   const query = q.value.trim().toLowerCase();
+  const [a, b] = bounds();
   const shown = WORDS.filter(w => {
+    if (useRange && (w.n < a || w.n > b)) return false;
     if (verbsOnly && !w.verb) return false;
     if (!query) return true;
+    if (String(w.n) === query) return true;
     return [w.en,w.es,w.pt,w.de,w.hi,w.es_do,w.es_you,w.pt_do,w.pt_you,w.de_do,w.de_you,w.hi_do,w.hi_you].join(" ").toLowerCase().includes(query);
   });
-  count.textContent = shown.length + (shown.length === 1 ? " word" : " words");
+  const rangeLabel = useRange ? ` · ${a}–${b}` : "";
+  count.textContent = shown.length + (shown.length === 1 ? " word" : " words") + rangeLabel;
   const codes = lang === "all" ? ["es","pt","de","hi"] : [lang];
-  list.innerHTML = shown.map(w => `<article class="${hide ? "hidden-answer" : "revealed"}"><div class="en">${w.en}${w.verb ? '<span class="tag">verb</span>' : ""}</div>${codes.map(c => block(w, c)).join("")}${hide ? '<div class="hint">Tap to show</div>' : ""}</article>`).join("");
+  list.innerHTML = shown.map(w => `<article class="${hide ? "hidden-answer" : "revealed"}"><div class="en"><span class="num">${w.n}</span>${w.en}${w.verb ? '<span class="tag">verb</span>' : ""}</div>${codes.map(c => block(w, c)).join("")}${hide ? '<div class="hint">Tap to show</div>' : ""}</article>`).join("");
 }
 document.getElementById("langs").addEventListener("click", e => {
   const btn = e.target.closest("button"); if (!btn) return;
@@ -96,6 +126,14 @@ document.getElementById("langs").addEventListener("click", e => {
 });
 document.getElementById("verbs").addEventListener("click", e => { verbsOnly = !verbsOnly; e.currentTarget.classList.toggle("on", verbsOnly); render(); });
 document.getElementById("hide").addEventListener("click", e => { hide = !hide; e.currentTarget.classList.toggle("on", hide); render(); });
+document.getElementById("rangeBtn").addEventListener("click", e => {
+  useRange = !useRange;
+  e.currentTarget.classList.toggle("on", useRange);
+  document.getElementById("range").classList.toggle("on", useRange);
+  render();
+});
+fromN.addEventListener("input", render);
+toN.addEventListener("input", render);
 list.addEventListener("click", e => {
   const card = e.target.closest("article");
   if (!card || !hide) return;
