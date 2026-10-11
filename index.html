@@ -44,13 +44,18 @@
   .range label { color:var(--muted); font-size:13px; font-weight:600; }
   .range input { width:88px; border:1px solid var(--line); background:white; border-radius:10px; font-size:16px; padding:8px 10px; color:var(--ink); outline:none; }
   .range input:focus { border-color:var(--de); }
+  button.hide-word { border:1px solid var(--line); background:white; color:var(--muted); border-radius:999px; padding:6px 10px; font-size:12px; font-weight:700; margin-top:10px; }
+  article.compressed { padding:8px 12px; cursor:pointer; }
+  article.compressed .en { font-size:15px; font-weight:600; color:var(--muted); }
+  article.compressed .num { background:#b7c2cc; }
+  article.compressed .lang, article.compressed .hint, article.compressed .hide-word, article.compressed .tag { display:none; }
   @media (min-width:720px) { .forms { grid-template-columns:1fr 1fr; } }
 </style>
 </head>
 <body>
 <header>
   <h1>Words</h1>
-  <p class="sub">Tap a card to reveal it when answers are hidden.</p>
+  <p class="sub">Hide words you know. A hidden card collapses; tap it to bring it back.</p>
   <input id="q" type="search" placeholder="Search English or a translation" autocomplete="off" enterkeyhint="search">
   <div class="row" id="langs">
     <button class="chip on es" data-lang="es">Spanish</button>
@@ -63,6 +68,7 @@
     <button class="toggle" id="verbs">Verbs only</button>
     <button class="toggle" id="hide">Hide answers</button>
     <button class="toggle" id="rangeBtn">Range</button>
+    <button class="toggle" id="unhideRange">Unhide range</button>
   </div>
   <div class="range" id="range">
     <label for="fromN">From</label>
@@ -85,6 +91,9 @@ const labels = {es:"Spanish", pt:"Portuguese", de:"German", hi:"Hindi"};
 WORDS.forEach((w, i) => w.n = i + 1);
 const fromN = document.getElementById("fromN");
 const toN = document.getElementById("toN");
+const STORE = "words-hidden-v1";
+const hidden = new Set(JSON.parse(localStorage.getItem(STORE) || "[]"));
+function saveHidden() { localStorage.setItem(STORE, JSON.stringify([...hidden])); }
 function forms(w, code) {
   const doing = w[code + "_do"], you = w[code + "_you"];
   if (!doing && !you) return "";
@@ -114,9 +123,15 @@ function render() {
     return [w.en,w.es,w.pt,w.de,w.hi,w.es_do,w.es_you,w.pt_do,w.pt_you,w.de_do,w.de_you,w.hi_do,w.hi_you].join(" ").toLowerCase().includes(query);
   });
   const rangeLabel = useRange ? ` · ${a}–${b}` : "";
-  count.textContent = shown.length + (shown.length === 1 ? " word" : " words") + rangeLabel;
+  const hiddenHere = shown.filter(w => hidden.has(w.n)).length;
+  const hiddenLabel = hiddenHere ? ` · ${hiddenHere} hidden` : "";
+  count.textContent = shown.length + (shown.length === 1 ? " word" : " words") + rangeLabel + hiddenLabel;
   const codes = lang === "all" ? ["es","pt","de","hi"] : [lang];
-  list.innerHTML = shown.map(w => `<article class="${hide ? "hidden-answer" : "revealed"}"><div class="en"><span class="num">${w.n}</span>${w.en}${w.verb ? '<span class="tag">verb</span>' : ""}</div>${codes.map(c => block(w, c)).join("")}${hide ? '<div class="hint">Tap to show</div>' : ""}</article>`).join("");
+  list.innerHTML = shown.map(w => {
+    const collapsed = hidden.has(w.n);
+    const answerClass = hide && !collapsed ? "hidden-answer" : "revealed";
+    return `<article class="${answerClass}${collapsed ? " compressed" : ""}" data-n="${w.n}"><div class="en"><span class="num">${w.n}</span>${w.en}${w.verb ? '<span class="tag">verb</span>' : ""}</div>${codes.map(c => block(w, c)).join("")}${collapsed ? "" : `<button class="hide-word" data-n="${w.n}">Hide</button>`}${hide && !collapsed ? '<div class="hint">Tap to show</div>' : ""}</article>`;
+  }).join("");
 }
 document.getElementById("langs").addEventListener("click", e => {
   const btn = e.target.closest("button"); if (!btn) return;
@@ -130,18 +145,3 @@ document.getElementById("rangeBtn").addEventListener("click", e => {
   useRange = !useRange;
   e.currentTarget.classList.toggle("on", useRange);
   document.getElementById("range").classList.toggle("on", useRange);
-  render();
-});
-fromN.addEventListener("input", render);
-toN.addEventListener("input", render);
-list.addEventListener("click", e => {
-  const card = e.target.closest("article");
-  if (!card || !hide) return;
-  card.classList.toggle("revealed");
-  card.classList.toggle("hidden-answer");
-});
-q.addEventListener("input", render);
-render();
-</script>
-</body>
-</html>
