@@ -145,3 +145,42 @@ document.getElementById("rangeBtn").addEventListener("click", e => {
   useRange = !useRange;
   e.currentTarget.classList.toggle("on", useRange);
   document.getElementById("range").classList.toggle("on", useRange);
+  render();
+});
+fromN.addEventListener("input", render);
+toN.addEventListener("input", render);
+document.getElementById("unhideRange").addEventListener("click", () => {
+  const [a, b] = bounds();
+  const lo = useRange ? a : 1;
+  const hi = useRange ? b : WORDS.length;
+  WORDS.forEach(w => { if (w.n >= lo && w.n <= hi) hidden.delete(w.n); });
+  saveHidden();
+  render();
+});
+list.addEventListener("click", e => {
+  const hideBtn = e.target.closest(".hide-word");
+  if (hideBtn) {
+    e.stopPropagation();
+    hidden.add(Number(hideBtn.dataset.n));
+    saveHidden();
+    render();
+    return;
+  }
+  const card = e.target.closest("article");
+  if (!card) return;
+  const n = Number(card.dataset.n);
+  if (hidden.has(n)) {
+    hidden.delete(n);
+    saveHidden();
+    render();
+    return;
+  }
+  if (!hide) return;
+  card.classList.toggle("revealed");
+  card.classList.toggle("hidden-answer");
+});
+q.addEventListener("input", render);
+render();
+</script>
+</body>
+</html>
