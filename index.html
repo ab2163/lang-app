@@ -92,6 +92,7 @@
   <div class="tools">
     <button id="exportNotes" type="button">Export notes</button>
     <button id="importNotes" type="button">Import notes</button>
+    <button id="loadGithub" type="button">Load notes from GitHub</button>
     <button id="saveGithub" type="button">Save notes to GitHub</button>
     <input id="importFile" class="file-btn" type="file" accept="application/json,.json">
   </div>
@@ -328,15 +329,26 @@ list.addEventListener("click", e => {
 });
 q.addEventListener("input", render);
 applyNotesVisibility();
-if (!Object.keys(notes).length) {
-  fetch("notes.json").then(r => r.ok ? r.json() : null).then(data => {
-    if (data && typeof data === "object" && Object.keys(data).length) {
-      notes = data;
-      saveNotes();
-      render();
+async function loadNotesFromGitHub(manual) {
+  try {
+    const r = await fetch("notes.json?t=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) {
+      if (manual) ghStatus.textContent = "No notes.json on GitHub yet.";
+      return;
     }
-  }).catch(() => {});
+    const data = await r.json();
+    if (!data || typeof data !== "object") return;
+    notes = data;
+    saveNotes();
+    render();
+    const n = Object.keys(notes).length;
+    ghStatus.textContent = "Loaded " + n + " word" + (n === 1 ? "" : "s") + " of notes from GitHub.";
+  } catch (err) {
+    if (manual) ghStatus.textContent = "Could not load notes from GitHub.";
+  }
 }
+document.getElementById("loadGithub").addEventListener("click", () => loadNotesFromGitHub(true));
+loadNotesFromGitHub(false);
 render();
 </script>
 </body>
