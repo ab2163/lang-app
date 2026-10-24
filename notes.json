@@ -280,5 +280,17 @@
   },
   "357": {
     "es": "e.g. *El bano esta abajo* (the bathroom is downstairs)\nNote: usage of estar for where something or someone is, even if they never move"
+  },
+  "358": {
+    "es": "Prioritize *parte* which can mean almost any kind of part (physical or abstract) "
+  },
+  "359": {
+    "es": "Prefer *terminado*"
+  },
+  "361": {
+    "es": "Prefer *fuerte*\nDo not confuse with *la fuerza* (strength)"
+  },
+  "362": {
+    "es": "Use *silencioso* for an environment: *mi habitacion es muy silenciosa*\nUse *callado* for a person: *esta chica esta bastante callada*\nGrok mnemonic: *callado* - *call* them and they go quiet"
   }
 }
