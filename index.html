@@ -35,8 +35,8 @@
   .form { background:var(--soft); border-radius:10px; padding:8px 10px; }
   .form b { display:block; font-size:11px; color:var(--muted); font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-bottom:2px; }
   .form span { font-size:15px; line-height:1.35; }
-  .hidden-answer .word, .hidden-answer .forms, .hidden-answer .note { filter:blur(7px); user-select:none; pointer-events:none; }
-  article.revealed .word, article.revealed .forms, article.revealed .note { filter:none; pointer-events:auto; }
+  .hidden-answer .word, .hidden-answer .forms, .hidden-answer .note-box { filter:blur(7px); user-select:none; pointer-events:none; }
+  article.revealed .word, article.revealed .forms, article.revealed .note-box { filter:none; pointer-events:auto; }
   .hint { color:var(--muted); font-size:12px; margin-top:8px; }
   .num { display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:22px; margin-right:8px; padding:0 7px; border-radius:999px; background:#243246; color:white; font-size:12px; font-weight:700; letter-spacing:0; vertical-align:3px; }
   .range { display:none; align-items:center; gap:8px; margin-top:10px; }
@@ -49,10 +49,17 @@
   article.compressed .en { font-size:15px; font-weight:600; color:var(--muted); }
   article.compressed .num { background:#b7c2cc; }
   article.compressed .lang, article.compressed .hint, article.compressed .hide-word, article.compressed .tag { display:none; }
-  .note { width:100%; margin-top:8px; border:1px dashed var(--line); background:#fbfcfe; border-radius:10px; font:inherit; font-size:14px; line-height:1.4; color:var(--ink); padding:8px 10px; resize:vertical; min-height:38px; }
+  .note-box { margin-top:8px; }
+  .note-tools { display:flex; gap:6px; margin-bottom:6px; }
+  .note-tools button { width:28px; height:26px; border:1px solid var(--line); background:white; border-radius:8px; font-size:13px; color:var(--ink); }
+  .note-tools button b { font-style:normal; } .note-tools button i { font-weight:700; }
+  .note { width:100%; border:1px dashed var(--line); background:#fbfcfe; border-radius:10px; font:inherit; font-size:14px; line-height:1.4; color:var(--ink); padding:8px 10px; resize:vertical; min-height:38px; }
   .note:focus { outline:none; border-color:var(--de); background:white; }
   .note::placeholder { color:#9aa6b2; }
-  body.notes-off .note { display:none; }
+  .note-view { margin-top:6px; font-size:14px; line-height:1.45; color:var(--ink); }
+  .note-view:empty { display:none; }
+  .note-view b { font-weight:700; } .note-view i { font-style:italic; }
+  body.notes-off .note-box { display:none; }
   .file-btn { display:none; }
   .tools { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
   .tools button { border:1px solid var(--line); background:white; color:var(--ink); border-radius:999px; padding:8px 12px; font-size:14px; }
@@ -144,9 +151,14 @@ function forms(w, code) {
   if (!doing && !you) return "";
   return `<div class="forms">${doing ? `<div class="form"><b>I'm doing</b><span>${doing}</span></div>` : ""}${you ? `<div class="form"><b>You</b><span>${you}</span></div>` : ""}</div>`;
 }
+function esc(s) { return s.replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">"); }
+function renderNote(raw) {
+  return esc(raw).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/\*([^*]+)\*/g, "<i>$1</i>").replace(/\n/g, "<br>");
+}
 function block(w, code) {
-  const note = noteText(w.n, code).replace(/&/g,"&").replace(/</g,"<");
-  return `<div class="lang"><div class="label ${code}">${labels[code]}</div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note">${note}</textarea></div>`;
+  const raw = noteText(w.n, code);
+  const note = esc(raw);
+  return `<div class="lang"><div class="label ${code}">${labels[code]}</div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<div class="note-box"><div class="note-tools"><button type="button" class="fmt" data-wrap="**" title="Bold"><b>B</b></button><button type="button" class="fmt" data-wrap="*" title="Italic"><i>I</i></button></div><textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note. **bold** *italic*">${note}</textarea><div class="note-view">${renderNote(raw)}</div></div></div>`;
 }
 function bounds() {
   let a = parseInt(fromN.value, 10);
@@ -204,9 +216,29 @@ document.getElementById("unhideRange").addEventListener("click", () => {
   saveHidden();
   render();
 });
+function wrapSelection(area, mark) {
+  const start = area.selectionStart, end = area.selectionEnd;
+  const value = area.value;
+  const selected = value.slice(start, end) || "text";
+  const next = value.slice(0, start) + mark + selected + mark + value.slice(end);
+  area.value = next;
+  const from = start + mark.length;
+  area.setSelectionRange(from, from + selected.length);
+  area.dispatchEvent(new Event("input", { bubbles: true }));
+  area.focus();
+}
+list.addEventListener("click", e => {
+  const fmt = e.target.closest(".fmt");
+  if (!fmt) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const area = fmt.closest(".note-box").querySelector(".note");
+  wrapSelection(area, fmt.dataset.wrap);
+});
 list.addEventListener("input", e => {
   if (!e.target.classList.contains("note")) return;
   setNote(e.target.dataset.n, e.target.dataset.lang, e.target.value);
+  e.target.parentElement.querySelector(".note-view").innerHTML = renderNote(e.target.value);
 });
 document.getElementById("notesBtn").addEventListener("click", () => {
   showNotes = !showNotes;
@@ -272,7 +304,7 @@ document.getElementById("saveGithub").addEventListener("click", async () => {
   }
 });
 list.addEventListener("click", e => {
-  if (e.target.classList.contains("note")) return;
+  if (e.target.classList.contains("note") || e.target.closest(".note-box")) return;
   const hideBtn = e.target.closest(".hide-word");
   if (hideBtn) {
     e.stopPropagation();
