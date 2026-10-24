@@ -35,8 +35,8 @@
   .form { background:var(--soft); border-radius:10px; padding:8px 10px; }
   .form b { display:block; font-size:11px; color:var(--muted); font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-bottom:2px; }
   .form span { font-size:15px; line-height:1.35; }
-  .hidden-answer .word, .hidden-answer .forms { filter:blur(7px); user-select:none; }
-  article.revealed .word, article.revealed .forms { filter:none; }
+  .hidden-answer .word, .hidden-answer .forms, .hidden-answer .note { filter:blur(7px); user-select:none; pointer-events:none; }
+  article.revealed .word, article.revealed .forms, article.revealed .note { filter:none; pointer-events:auto; }
   .hint { color:var(--muted); font-size:12px; margin-top:8px; }
   .num { display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:22px; margin-right:8px; padding:0 7px; border-radius:999px; background:#243246; color:white; font-size:12px; font-weight:700; letter-spacing:0; vertical-align:3px; }
   .range { display:none; align-items:center; gap:8px; margin-top:10px; }
@@ -49,6 +49,17 @@
   article.compressed .en { font-size:15px; font-weight:600; color:var(--muted); }
   article.compressed .num { background:#b7c2cc; }
   article.compressed .lang, article.compressed .hint, article.compressed .hide-word, article.compressed .tag { display:none; }
+  .note { width:100%; margin-top:8px; border:1px dashed var(--line); background:#fbfcfe; border-radius:10px; font:inherit; font-size:14px; line-height:1.4; color:var(--ink); padding:8px 10px; resize:vertical; min-height:38px; }
+  .note:focus { outline:none; border-color:var(--de); background:white; }
+  .note::placeholder { color:#9aa6b2; }
+  body.notes-off .note { display:none; }
+  .file-btn { display:none; }
+  .tools { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .tools button { border:1px solid var(--line); background:white; color:var(--ink); border-radius:999px; padding:8px 12px; font-size:14px; }
+  .github { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:10px; }
+  .github input { flex:1; min-width:220px; border:1px solid var(--line); background:white; border-radius:10px; font-size:15px; padding:8px 10px; color:var(--ink); outline:none; }
+  .github button { border:1px solid var(--line); background:white; color:var(--ink); border-radius:999px; padding:8px 12px; font-size:14px; }
+  #ghStatus { flex-basis:100%; }
   @media (min-width:720px) { .forms { grid-template-columns:1fr 1fr; } }
 </style>
 </head>
@@ -69,6 +80,19 @@
     <button class="toggle" id="hide">Hide answers</button>
     <button class="toggle" id="rangeBtn">Range</button>
     <button class="toggle" id="unhideRange">Unhide range</button>
+    <button class="toggle" id="notesBtn">Hide notes</button>
+  </div>
+  <div class="tools">
+    <button id="exportNotes" type="button">Export notes</button>
+    <button id="importNotes" type="button">Import notes</button>
+    <button id="saveGithub" type="button">Save notes to GitHub</button>
+    <input id="importFile" class="file-btn" type="file" accept="application/json,.json">
+  </div>
+  <div class="github" id="github">
+    <p class="sub">The token stays in this browser only. It is never written into the page or the repo.</p>
+    <input id="ghToken" type="password" placeholder="Fine-grained token, contents:write on lang-app" autocomplete="off">
+    <button id="saveToken" type="button">Remember token</button>
+    <span id="ghStatus" class="sub"></span>
   </div>
   <div class="range" id="range">
     <label for="fromN">From</label>
@@ -92,15 +116,37 @@ WORDS.forEach((w, i) => w.n = i + 1);
 const fromN = document.getElementById("fromN");
 const toN = document.getElementById("toN");
 const STORE = "words-hidden-v1";
+const NOTES = "words-notes-v1";
+const NOTES_SHOW = "words-notes-show-v1";
 const hidden = new Set(JSON.parse(localStorage.getItem(STORE) || "[]"));
+let notes = JSON.parse(localStorage.getItem(NOTES) || "{}");
+let showNotes = localStorage.getItem(NOTES_SHOW) !== "0";
 function saveHidden() { localStorage.setItem(STORE, JSON.stringify([...hidden])); }
+function saveNotes() { localStorage.setItem(NOTES, JSON.stringify(notes)); }
+function noteText(n, code) { return (notes[n] && notes[n][code]) || ""; }
+function setNote(n, code, value) {
+  const key = String(n);
+  if (!notes[key]) notes[key] = {};
+  const v = value.trim();
+  if (v) notes[key][code] = value;
+  else delete notes[key][code];
+  if (!Object.keys(notes[key]).length) delete notes[key];
+  saveNotes();
+}
+function applyNotesVisibility() {
+  document.body.classList.toggle("notes-off", !showNotes);
+  const btn = document.getElementById("notesBtn");
+  btn.textContent = showNotes ? "Hide notes" : "Show notes";
+  btn.classList.toggle("on", !showNotes);
+}
 function forms(w, code) {
   const doing = w[code + "_do"], you = w[code + "_you"];
   if (!doing && !you) return "";
   return `<div class="forms">${doing ? `<div class="form"><b>I'm doing</b><span>${doing}</span></div>` : ""}${you ? `<div class="form"><b>You</b><span>${you}</span></div>` : ""}</div>`;
 }
 function block(w, code) {
-  return `<div class="lang"><div class="label ${code}">${labels[code]}</div><div class="word">${w[code] || "—"}</div>${forms(w, code)}</div>`;
+  const note = noteText(w.n, code).replace(/&/g,"&").replace(/</g,"<");
+  return `<div class="lang"><div class="label ${code}">${labels[code]}</div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note">${note}</textarea></div>`;
 }
 function bounds() {
   let a = parseInt(fromN.value, 10);
@@ -120,7 +166,8 @@ function render() {
     if (verbsOnly && !w.verb) return false;
     if (!query) return true;
     if (String(w.n) === query) return true;
-    return [w.en,w.es,w.pt,w.de,w.hi,w.es_do,w.es_you,w.pt_do,w.pt_you,w.de_do,w.de_you,w.hi_do,w.hi_you].join(" ").toLowerCase().includes(query);
+    const noteBits = notes[w.n] ? Object.values(notes[w.n]).join(" ") : "";
+    return [w.en,w.es,w.pt,w.de,w.hi,w.es_do,w.es_you,w.pt_do,w.pt_you,w.de_do,w.de_you,w.hi_do,w.hi_you,noteBits].join(" ").toLowerCase().includes(query);
   });
   const rangeLabel = useRange ? ` · ${a}–${b}` : "";
   const hiddenHere = shown.filter(w => hidden.has(w.n)).length;
@@ -157,7 +204,75 @@ document.getElementById("unhideRange").addEventListener("click", () => {
   saveHidden();
   render();
 });
+list.addEventListener("input", e => {
+  if (!e.target.classList.contains("note")) return;
+  setNote(e.target.dataset.n, e.target.dataset.lang, e.target.value);
+});
+document.getElementById("notesBtn").addEventListener("click", () => {
+  showNotes = !showNotes;
+  localStorage.setItem(NOTES_SHOW, showNotes ? "1" : "0");
+  applyNotesVisibility();
+});
+document.getElementById("exportNotes").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(notes, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "notes.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById("importNotes").addEventListener("click", () => document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change", async e => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const data = JSON.parse(await file.text());
+  notes = data && typeof data === "object" ? data : {};
+  saveNotes();
+  e.target.value = "";
+  render();
+});
+const GH = { owner: "ab2163", repo: "lang-app", branch: "main", path: "notes.json" };
+const TOKEN_KEY = "words-github-token-v1";
+const ghToken = document.getElementById("ghToken");
+const ghStatus = document.getElementById("ghStatus");
+if (localStorage.getItem(TOKEN_KEY)) ghToken.value = localStorage.getItem(TOKEN_KEY);
+document.getElementById("saveToken").addEventListener("click", () => {
+  const token = ghToken.value.trim();
+  if (!token) { localStorage.removeItem(TOKEN_KEY); ghStatus.textContent = "Token cleared."; return; }
+  localStorage.setItem(TOKEN_KEY, token);
+  ghStatus.textContent = "Token remembered on this browser.";
+});
+function toBase64(text) {
+  return btoa(unescape(encodeURIComponent(text)));
+}
+document.getElementById("saveGithub").addEventListener("click", async () => {
+  const token = ghToken.value.trim();
+  if (!token) { ghStatus.textContent = "Add a token first."; return; }
+  ghStatus.textContent = "Saving…";
+  const headers = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+  const url = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}?ref=${GH.branch}`;
+  try {
+    const existing = await fetch(url, { headers });
+    let sha = "";
+    if (existing.ok) {
+      const info = await existing.json();
+      sha = info.sha || "";
+    } else if (existing.status !== 404) {
+      throw new Error("Could not read notes.json (" + existing.status + ")");
+    }
+    const body = { message: "Update vocabulary notes", content: toBase64(JSON.stringify(notes, null, 2) + "\n"), branch: GH.branch };
+    if (sha) body.sha = sha;
+    const put = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`, {
+      method: "PUT", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(body)
+    });
+    if (!put.ok) throw new Error((await put.text()).slice(0, 180) || ("Save failed (" + put.status + ")"));
+    ghStatus.textContent = "Committed notes.json to " + GH.owner + "/" + GH.repo + ".";
+  } catch (err) {
+    ghStatus.textContent = err.message || "Save failed.";
+  }
+});
 list.addEventListener("click", e => {
+  if (e.target.classList.contains("note")) return;
   const hideBtn = e.target.closest(".hide-word");
   if (hideBtn) {
     e.stopPropagation();
@@ -180,6 +295,16 @@ list.addEventListener("click", e => {
   card.classList.toggle("hidden-answer");
 });
 q.addEventListener("input", render);
+applyNotesVisibility();
+if (!Object.keys(notes).length) {
+  fetch("notes.json").then(r => r.ok ? r.json() : null).then(data => {
+    if (data && typeof data === "object" && Object.keys(data).length) {
+      notes = data;
+      saveNotes();
+      render();
+    }
+  }).catch(() => {});
+}
 render();
 </script>
 </body>
