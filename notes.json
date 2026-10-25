@@ -347,11 +347,20 @@
   "407": {
     "es": "Same as word for *menu*"
   },
+  "409": {
+    "es": "From the verb *responder* (to reply)\n*Cual es la respuesta correcta?*"
+  },
   "411": {
     "es": "Prefer *incorrecto*"
   },
+  "413": {
+    "es": "Can mean both *pastor* and *shepherd*"
+  },
   "418": {
     "es": "Decomposes into *el pelo* (hair) plus *quero* (want); although this break-down is not accurate!"
+  },
+  "425": {
+    "es": "Almost like *veteran* plus *-ario*"
   },
   "429": {
     "es": "(Grok) sounds like *as a fatter* (a fat flight attendant, perhaps)"
@@ -367,5 +376,26 @@
   },
   "439": {
     "es": "Note: same as *la musica* (music) "
+  },
+  "444": {
+    "es": "Like *costa del sol*"
+  },
+  "447": {
+    "es": "Prefer *la medicina*"
+  },
+  "448": {
+    "es": "Same prefix as *enfermera* (nurse)"
+  },
+  "449": {
+    "es": "Same prefix as *enfermera* (nurse)"
+  },
+  "450": {
+    "es": "*El dolor* means pain:\n*Dolor* sounds like *dollar* and pain costs you (Grok)\n*Garganta* means throat (same sound you make when you *gargle*)"
+  },
+  "451": {
+    "es": "When you cough you might *toss* your head (Grok)"
+  },
+  "457": {
+    "es": "Formed by *jugar* plus *-ete* (meaning *little play*)"
   }
 }
