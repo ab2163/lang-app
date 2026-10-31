@@ -355,7 +355,7 @@
       "es": "Prefer *otra vez* (for now) although *de nuevo* is also common.\n*Otra vez* literally means *another time* (*vez* means time as in occasion or turn)\n*Dilo otra vez* (say that again)\n*Puedes hacerlo otra vez?* (can you do that again?)"
     },
     "405": {
-      "es": "(Repeat of previous)"
+      "es": "Prefer *feura* which means *not here right now*\n*Lejos* means *far away*\n*Mi mujer esta feura* (my wife is away)\nSounds a bit like *fuerza* (strength) without the *z*"
     },
     "407": {
       "es": "Same as word for *menu*"
@@ -406,7 +406,7 @@
       "es": "*El dolor* means pain:\n*Dolor* sounds like *dollar* and pain costs you (Grok)\n*Garganta* means throat (same sound you make when you *gargle*)"
     },
     "451": {
-      "es": "When you cough you might *toss* your head (Grok)"
+      "es": "When you cough you might *toss* your head (Grok)\n*Tengo tos* (I have a cough)"
     },
     "457": {
       "es": "Formed by *jugar* plus *-ete* (meaning *little play*)"
@@ -437,6 +437,9 @@
     },
     "470": {
       "es": "Use *calido* when describing environment and people:\n*Ella as muy calida*\n*Esta colido* (it is hot [environment])\n*La comida no es caliente*\n*Calido* has same root as *calorie* (unit of heat energy)"
+    },
+    "471": {
+      "es": "*Esta frio afuera* (it's cold outside)\n*Esta chica es bastante fria* (this girl is slightly cold)"
     }
   },
   "difficulty": {
@@ -1521,6 +1524,192 @@
       "es": 2
     },
     "404": {
+      "es": 1
+    },
+    "405": {
+      "es": 3
+    },
+    "406": {
+      "es": 1
+    },
+    "407": {
+      "es": 1
+    },
+    "408": {
+      "es": 1
+    },
+    "409": {
+      "es": 3
+    },
+    "410": {
+      "es": 1
+    },
+    "411": {
+      "es": 1
+    },
+    "412": {
+      "es": 1
+    },
+    "413": {
+      "es": 1
+    },
+    "414": {
+      "es": 1
+    },
+    "415": {
+      "es": 2
+    },
+    "416": {
+      "es": 1
+    },
+    "417": {
+      "es": 1
+    },
+    "418": {
+      "es": 3
+    },
+    "419": {
+      "es": 2
+    },
+    "420": {
+      "es": 1
+    },
+    "421": {
+      "es": 2
+    },
+    "422": {
+      "es": 2
+    },
+    "423": {
+      "es": 1
+    },
+    "424": {
+      "es": 2
+    },
+    "425": {
+      "es": 2
+    },
+    "426": {
+      "es": 2
+    },
+    "427": {
+      "es": 1
+    },
+    "428": {
+      "es": 1
+    },
+    "429": {
+      "es": 3
+    },
+    "430": {
+      "es": 1
+    },
+    "431": {
+      "es": 1
+    },
+    "432": {
+      "es": 2
+    },
+    "433": {
+      "es": 2
+    },
+    "434": {
+      "es": 1
+    },
+    "435": {
+      "es": 2
+    },
+    "436": {
+      "es": 2
+    },
+    "437": {
+      "es": 1
+    },
+    "438": {
+      "es": 3
+    },
+    "439": {
+      "es": 1
+    },
+    "440": {
+      "es": 1
+    },
+    "444": {
+      "es": 1
+    },
+    "445": {
+      "es": 1
+    },
+    "447": {
+      "es": 1
+    },
+    "448": {
+      "es": 3
+    },
+    "449": {
+      "es": 2
+    },
+    "450": {
+      "es": 3
+    },
+    "451": {
+      "es": 3
+    },
+    "452": {
+      "es": 1
+    },
+    "453": {
+      "es": 1
+    },
+    "454": {
+      "es": 1
+    },
+    "455": {
+      "es": 1
+    },
+    "456": {
+      "es": 2
+    },
+    "457": {
+      "es": 3
+    },
+    "458": {
+      "es": 2
+    },
+    "459": {
+      "es": 1
+    },
+    "460": {
+      "es": 1
+    },
+    "461": {
+      "es": 2
+    },
+    "462": {
+      "es": 2
+    },
+    "463": {
+      "es": 2
+    },
+    "464": {
+      "es": 1
+    },
+    "465": {
+      "es": 1
+    },
+    "466": {
+      "es": 1
+    },
+    "469": {
+      "es": 2
+    },
+    "470": {
+      "es": 2
+    },
+    "471": {
+      "es": 2
+    },
+    "472": {
       "es": 1
     }
   }
