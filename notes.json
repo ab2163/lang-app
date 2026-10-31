@@ -491,6 +491,21 @@
     },
     "539": {
       "es": "Reminds me of *la rue* in French (street), although the words are not linked\nThe wheel rolls down the street"
+    },
+    "542": {
+      "es": "Sounds similar to *rotund*"
+    },
+    "547": {
+      "es": "Used in nuts *los frutos secos* (dry fruits)"
+    },
+    "548": {
+      "es": "Sounds like *mojito* (which is a drink, so must be wet)"
+    },
+    "549": {
+      "es": "Sounds similar to *pescado* (fish); lots of fish are heavy (tuna, sharks)"
+    },
+    "550": {
+      "es": "Prefer *ligero* (sounds like *liger*, a giant beast, the opposite of light-weight!)"
     }
   },
   "difficulty": {
@@ -1915,6 +1930,36 @@
     },
     "538": {
       "es": 1
+    },
+    "539": {
+      "es": 3
+    },
+    "540": {
+      "es": 2
+    },
+    "541": {
+      "es": 1
+    },
+    "542": {
+      "es": 2
+    },
+    "543": {
+      "es": 1
+    },
+    "544": {
+      "es": 1
+    },
+    "547": {
+      "es": 2
+    },
+    "548": {
+      "es": 3
+    },
+    "549": {
+      "es": 2
+    },
+    "550": {
+      "es": 2
     }
   }
 }
