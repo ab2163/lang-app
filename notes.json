@@ -292,7 +292,7 @@
       "es": "Same root as *large* but different meaning"
     },
     "368": {
-      "es": "e.g. *El bano esta abajo* (the bathroom is downstairs)\nNote: usage of estar for where something or someone is, even if they never move"
+      "es": "e.g. *El bano esta abajo* (the bathroom is downstairs)\nNote: usage of estar for where something or someone is, even if they never move\nExactly like *trabajo* but without the *tr* at the start"
     },
     "369": {
       "es": "Prioritize *parte* which can mean almost any kind of part (physical or abstract) "
@@ -304,13 +304,13 @@
       "es": "Prefer *fuerte*\nDo not confuse with *la fuerza* (strength)"
     },
     "373": {
-      "es": "Use *silencioso* for an environment: *mi habitacion es muy silenciosa*\nUse *callado* for a person: *esta chica esta bastante callada*\nGrok mnemonic: *callado* - *call* them and they go quiet"
+      "es": "Use *silencioso* for an environment: *mi habitacion es muy silenciosa*\nUse *callado* for a person: *esta chica esta bastante callada*\nGrok mnemonic: *callado* - *call* them and they go quiet\nAlso sounds a bit like Lamborghini *Gallardo*"
     },
     "375": {
       "es": "*Solamente* is slightly more emphatic\nVarious usages:\n*Este bolso cuesta solo veinte euros*\n*Esta nina tiene solamente cuatro anos*\n*Puedes completar el examen solo con boligrafo negro*"
     },
     "377": {
-      "es": "Same root as *local* (pertaining to a place)"
+      "es": "Same root as *local* (pertaining to a place)\nAlso: spelled like *sugar*"
     },
     "378": {
       "es": "*Mayoria* sounds like *mayor*\nUse *mayoria* for most a group:\n*La mayoria de gente...* (most people...)\nUse *mas* for superlative most:\n*Lo mas importante es...* (the most important thing is...)"
@@ -1402,6 +1402,96 @@
     },
     "349": {
       "es": 2
+    },
+    "351": {
+      "es": 3
+    },
+    "353": {
+      "es": 1
+    },
+    "354": {
+      "es": 2
+    },
+    "355": {
+      "es": 1
+    },
+    "356": {
+      "es": 1
+    },
+    "357": {
+      "es": 1
+    },
+    "358": {
+      "es": 1
+    },
+    "359": {
+      "es": 1
+    },
+    "360": {
+      "es": 1
+    },
+    "363": {
+      "es": 2
+    },
+    "364": {
+      "es": 1
+    },
+    "365": {
+      "es": 1
+    },
+    "367": {
+      "es": 2
+    },
+    "368": {
+      "es": 3
+    },
+    "369": {
+      "es": 1
+    },
+    "370": {
+      "es": 1
+    },
+    "371": {
+      "es": 2
+    },
+    "372": {
+      "es": 2
+    },
+    "373": {
+      "es": 3
+    },
+    "375": {
+      "es": 1
+    },
+    "377": {
+      "es": 3
+    },
+    "378": {
+      "es": 3
+    },
+    "379": {
+      "es": 2
+    },
+    "380": {
+      "es": 1
+    },
+    "381": {
+      "es": 3
+    },
+    "382": {
+      "es": 1
+    },
+    "383": {
+      "es": 2
+    },
+    "384": {
+      "es": 2
+    },
+    "385": {
+      "es": 1
+    },
+    "386": {
+      "es": 3
     }
   }
 }
