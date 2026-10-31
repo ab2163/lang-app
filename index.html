@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Words</title>
+<title>Language Study</title>
 <style>
   :root { --ink:#1c2430; --muted:#5c6b7a; --line:#e6ebf0; --bg:#f4f7fb; --card:#fff; --es:#b85c38; --pt:#2e7d4f; --de:#1f4e79; --hi:#5c4b8a; --soft:#eef3f8; }
   * { box-sizing:border-box; }
@@ -13,7 +13,7 @@
   header { position:sticky; top:0; z-index:5; background:rgba(244,247,251,.94); backdrop-filter:blur(10px); padding:14px 16px 10px; border-bottom:1px solid var(--line); }
   body.header-off header { display:none; }
   #showHeader { display:none; position:fixed; top:10px; right:12px; z-index:6; border:1px solid var(--line); background:rgba(255,255,255,.96); color:var(--ink); border-radius:999px; padding:8px 12px; font-size:14px; font-weight:700; box-shadow:0 4px 14px rgba(28,36,48,.12); }
-  body.header-off #showHeader { display:block; }
+  body.header-off #showHeader { display:flex; }
   h1 { font-size:22px; line-height:1.1; margin:0 0 4px; letter-spacing:-.03em; }
   .sub { color:var(--muted); font-size:13px; margin:0 0 12px; }
   input[type=search] { width:100%; border:1px solid var(--line); background:white; border-radius:12px; font-size:16px; padding:12px 14px; color:var(--ink); outline:none; }
@@ -21,10 +21,18 @@
   .row { display:flex; gap:8px; margin-top:10px; overflow-x:auto; }
   .row::-webkit-scrollbar { display:none; }
   button.chip, button.toggle { border:1px solid var(--line); background:white; color:var(--ink); border-radius:999px; padding:8px 12px; font-size:14px; white-space:nowrap; }
-  button.chip.on { color:white; border-color:transparent; }
-  button.chip.on.es { background:var(--es); } button.chip.on.pt { background:var(--pt); }
-  button.chip.on.de { background:var(--de); } button.chip.on.hi { background:var(--hi); }
-  button.chip.on.all { background:#243246; } button.toggle.on { background:#243246; color:white; border-color:#243246; }
+  button.chip { font-size:20px; line-height:1; padding:6px 10px; }
+  button.chip.on { border-color:transparent; }
+  button.chip.on.es { background:#f3e4dc; } button.chip.on.pt { background:#dceee3; }
+  button.chip.on.de { background:#dce6f1; } button.chip.on.hi { background:#e6e1f0; }
+  button.chip.on.all { background:#243246; color:white; }
+  button.toggle.state-yes { background:#2e7d4f; color:white; border-color:#2e7d4f; }
+  button.toggle.state-no { background:#b42318; color:white; border-color:#b42318; }
+  button.icon { width:36px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; }
+  button.icon svg { width:18px; height:18px; }
+  #showHeader { width:40px; height:40px; padding:0; display:none; align-items:center; justify-content:center; }
+  body.header-off #showHeader { display:flex; }
+  #showHeader svg { width:20px; height:20px; }
   main { padding:12px 16px 28px; }
   .count { color:var(--muted); font-size:13px; margin:4px 2px 10px; }
   article { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px 14px 12px; margin:0 0 10px; }
@@ -75,45 +83,39 @@
 </head>
 <body>
 <header>
-  <h1>Words</h1>
-  <p class="sub">Hide words you know. A hidden card collapses; tap it to bring it back.</p>
+  <h1>Language Study</h1>
   <input id="q" type="search" placeholder="Search English or a translation" autocomplete="off" enterkeyhint="search">
   <div class="row" id="langs">
-    <button class="chip on es" data-lang="es">Spanish</button>
-    <button class="chip pt" data-lang="pt">Portuguese</button>
-    <button class="chip de" data-lang="de">German</button>
-    <button class="chip hi" data-lang="hi">Hindi</button>
-    <button class="chip all" data-lang="all">All</button>
+    <button class="chip on es" data-lang="es" title="Spanish" aria-label="Spanish">🇪🇸</button>
+    <button class="chip pt" data-lang="pt" title="Portuguese" aria-label="Portuguese">🇧🇷</button>
+    <button class="chip de" data-lang="de" title="German" aria-label="German">🇩🇪</button>
+    <button class="chip hi" data-lang="hi" title="Hindi" aria-label="Hindi">🇮🇳</button>
+    <button class="chip all" data-lang="all" title="All" aria-label="All languages">🌐</button>
   </div>
   <div class="row">
-    <button class="toggle" id="verbs">Verbs only</button>
-    <button class="toggle" id="hide">Hide answers</button>
+    <button class="toggle" id="verbs">Verbs</button>
+    <button class="toggle" id="hide">Answers</button>
     <button class="toggle" id="rangeBtn">Range</button>
-    <button class="toggle" id="unhideRange">Unhide range</button>
-    <button class="toggle" id="notesBtn">Hide notes</button>
-    <button class="toggle" id="headerBtn">Hide header</button>
+    <button class="toggle" id="notesBtn">Notes</button>
+    <button class="toggle icon" id="headerBtn" title="Hide header" aria-label="Hide header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </div>
   <div class="tools">
-    <button id="exportNotes" type="button">Export notes</button>
-    <button id="importNotes" type="button">Import notes</button>
     <button id="loadGithub" type="button">Load notes from GitHub</button>
     <button id="saveGithub" type="button">Save notes to GitHub</button>
-    <input id="importFile" class="file-btn" type="file" accept="application/json,.json">
   </div>
   <div class="github" id="github">
-    <p class="sub">The token stays in this browser only. It is never written into the page or the repo.</p>
     <input id="ghToken" type="password" placeholder="Fine-grained token, contents:write on lang-app" autocomplete="off">
     <button id="saveToken" type="button">Remember token</button>
     <span id="ghStatus" class="sub"></span>
   </div>
   <div class="range" id="range">
     <label for="fromN">From</label>
-    <input id="fromN" type="number" min="1" max="1000" value="1" inputmode="numeric">
+    <input id="fromN" type="number" min="1" max="2000" value="1" inputmode="numeric">
     <label for="toN">to</label>
-    <input id="toN" type="number" min="1" max="1000" value="1000" inputmode="numeric">
+    <input id="toN" type="number" min="1" max="2000" value="1000" inputmode="numeric">
   </div>
 </header>
-<button id="showHeader" type="button">Show controls</button>
+<button id="showHeader" type="button" title="Show controls" aria-label="Show controls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
 <main>
   <div class="count" id="count"></div>
   <div id="list"></div>
@@ -123,7 +125,7 @@ const WORDS = [{"en":"mother","de":"die Mutter (-, ¨)","hi":"maa(n) (F) maataa 
 const list = document.getElementById("list");
 const count = document.getElementById("count");
 const q = document.getElementById("q");
-let lang = "es", verbsOnly = false, hide = false, useRange = false;
+let lang = "es", verbMode = 0, hide = false, rangeMode = 0;
 const labels = {es:"Spanish", pt:"Portuguese", de:"German", hi:"Hindi"};
 WORDS.forEach((w, i) => w.n = i + 1);
 const fromN = document.getElementById("fromN");
@@ -146,11 +148,14 @@ function setNote(n, code, value) {
   if (!Object.keys(notes[key]).length) delete notes[key];
   saveNotes();
 }
+function paint(btn, mode) {
+  btn.classList.remove("state-yes", "state-no");
+  if (mode === 1) btn.classList.add("state-yes");
+  if (mode === 2) btn.classList.add("state-no");
+}
 function applyNotesVisibility() {
   document.body.classList.toggle("notes-off", !showNotes);
-  const btn = document.getElementById("notesBtn");
-  btn.textContent = showNotes ? "Hide notes" : "Show notes";
-  btn.classList.toggle("on", !showNotes);
+  paint(document.getElementById("notesBtn"), showNotes ? 0 : 2);
 }
 function forms(w, code) {
   const doing = w[code + "_do"], you = w[code + "_you"];
@@ -180,14 +185,15 @@ function render() {
   const query = q.value.trim().toLowerCase();
   const [a, b] = bounds();
   const shown = WORDS.filter(w => {
-    if (useRange && (w.n < a || w.n > b)) return false;
-    if (verbsOnly && !w.verb) return false;
+    if (rangeMode && (w.n < a || w.n > b)) return false;
+    if (verbMode === 1 && !w.verb) return false;
+    if (verbMode === 2 && w.verb) return false;
     if (!query) return true;
     if (String(w.n) === query) return true;
     const noteBits = notes[w.n] ? Object.values(notes[w.n]).join(" ") : "";
     return [w.en,w.es,w.pt,w.de,w.hi,w.es_do,w.es_you,w.pt_do,w.pt_you,w.de_do,w.de_you,w.hi_do,w.hi_you,noteBits].join(" ").toLowerCase().includes(query);
   });
-  const rangeLabel = useRange ? ` · ${a}–${b}` : "";
+  const rangeLabel = rangeMode ? ` · ${a}–${b}` : "";
   const hiddenHere = shown.filter(w => hidden.has(w.n)).length;
   const hiddenLabel = hiddenHere ? ` · ${hiddenHere} hidden` : "";
   count.textContent = shown.length + (shown.length === 1 ? " word" : " words") + rangeLabel + hiddenLabel;
@@ -204,24 +210,30 @@ document.getElementById("langs").addEventListener("click", e => {
   document.querySelectorAll("#langs button").forEach(b => b.classList.remove("on"));
   btn.classList.add("on"); render();
 });
-document.getElementById("verbs").addEventListener("click", e => { verbsOnly = !verbsOnly; e.currentTarget.classList.toggle("on", verbsOnly); render(); });
-document.getElementById("hide").addEventListener("click", e => { hide = !hide; e.currentTarget.classList.toggle("on", hide); render(); });
+document.getElementById("verbs").addEventListener("click", e => {
+  verbMode = (verbMode + 1) % 3;
+  paint(e.currentTarget, verbMode);
+  render();
+});
+document.getElementById("hide").addEventListener("click", e => {
+  hide = !hide;
+  paint(e.currentTarget, hide ? 2 : 0);
+  render();
+});
 document.getElementById("rangeBtn").addEventListener("click", e => {
-  useRange = !useRange;
-  e.currentTarget.classList.toggle("on", useRange);
-  document.getElementById("range").classList.toggle("on", useRange);
+  rangeMode = (rangeMode + 1) % 3;
+  if (rangeMode === 2) {
+    const [a, b] = bounds();
+    WORDS.forEach(w => { if (w.n >= a && w.n <= b) hidden.delete(w.n); });
+    saveHidden();
+  }
+  paint(e.currentTarget, rangeMode);
+  document.getElementById("range").classList.toggle("on", rangeMode > 0);
   render();
 });
 fromN.addEventListener("input", render);
 toN.addEventListener("input", render);
-document.getElementById("unhideRange").addEventListener("click", () => {
-  const [a, b] = bounds();
-  const lo = useRange ? a : 1;
-  const hi = useRange ? b : WORDS.length;
-  WORDS.forEach(w => { if (w.n >= lo && w.n <= hi) hidden.delete(w.n); });
-  saveHidden();
-  render();
-});
+
 function wrapSelection(area, mark) {
   const start = area.selectionStart, end = area.selectionEnd;
   const value = area.value;
@@ -250,64 +262,6 @@ document.getElementById("notesBtn").addEventListener("click", () => {
   showNotes = !showNotes;
   localStorage.setItem(NOTES_SHOW, showNotes ? "1" : "0");
   applyNotesVisibility();
-});
-document.getElementById("exportNotes").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(notes, null, 2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "notes.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-});
-document.getElementById("importNotes").addEventListener("click", () => document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change", async e => {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  const data = JSON.parse(await file.text());
-  notes = data && typeof data === "object" ? data : {};
-  saveNotes();
-  e.target.value = "";
-  render();
-});
-const GH = { owner: "ab2163", repo: "lang-app", branch: "main", path: "notes.json" };
-const TOKEN_KEY = "words-github-token-v1";
-const ghToken = document.getElementById("ghToken");
-const ghStatus = document.getElementById("ghStatus");
-if (localStorage.getItem(TOKEN_KEY)) ghToken.value = localStorage.getItem(TOKEN_KEY);
-document.getElementById("saveToken").addEventListener("click", () => {
-  const token = ghToken.value.trim();
-  if (!token) { localStorage.removeItem(TOKEN_KEY); ghStatus.textContent = "Token cleared."; return; }
-  localStorage.setItem(TOKEN_KEY, token);
-  ghStatus.textContent = "Token remembered on this browser.";
-});
-function toBase64(text) {
-  return btoa(unescape(encodeURIComponent(text)));
-}
-document.getElementById("saveGithub").addEventListener("click", async () => {
-  const token = ghToken.value.trim();
-  if (!token) { ghStatus.textContent = "Add a token first."; return; }
-  ghStatus.textContent = "Saving…";
-  const headers = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
-  const url = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}?ref=${GH.branch}`;
-  try {
-    const existing = await fetch(url, { headers });
-    let sha = "";
-    if (existing.ok) {
-      const info = await existing.json();
-      sha = info.sha || "";
-    } else if (existing.status !== 404) {
-      throw new Error("Could not read notes.json (" + existing.status + ")");
-    }
-    const body = { message: "Update vocabulary notes", content: toBase64(JSON.stringify(notes, null, 2) + "\n"), branch: GH.branch };
-    if (sha) body.sha = sha;
-    const put = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`, {
-      method: "PUT", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(body)
-    });
-    if (!put.ok) throw new Error((await put.text()).slice(0, 180) || ("Save failed (" + put.status + ")"));
-    ghStatus.textContent = "Committed notes.json to " + GH.owner + "/" + GH.repo + ".";
-  } catch (err) {
-    ghStatus.textContent = err.message || "Save failed.";
-  }
 });
 list.addEventListener("click", e => {
   if (e.target.classList.contains("note") || e.target.closest(".note-box")) return;
@@ -347,7 +301,7 @@ async function loadNotesFromGitHub(manual) {
     saveNotes();
     render();
     const n = Object.keys(notes).length;
-    ghStatus.textContent = "Loaded " + n + " word" + (n === 1 ? "" : "s") + " of notes from GitHub.";
+    
   } catch (err) {
     if (manual) ghStatus.textContent = "Could not load notes from GitHub.";
   }
