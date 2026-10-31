@@ -342,6 +342,9 @@
     "393": {
       "es": "Prefer *fin*:\n*Esta es el fin del tour*\nNote: using *ser* (not *estar*) because it's about *what it is*, not a temporary state"
     },
+    "394": {
+      "es": "e.g. *tomate otra bebida* (have another drink)"
+    },
     "396": {
       "es": "Like *terra*"
     },
@@ -1492,6 +1495,33 @@
     },
     "386": {
       "es": 3
+    },
+    "387": {
+      "es": 3
+    },
+    "388": {
+      "es": 3
+    },
+    "393": {
+      "es": 1
+    },
+    "394": {
+      "es": 2
+    },
+    "396": {
+      "es": 1
+    },
+    "397": {
+      "es": 1
+    },
+    "399": {
+      "es": 2
+    },
+    "400": {
+      "es": 2
+    },
+    "404": {
+      "es": 1
     }
   }
 }
