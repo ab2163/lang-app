@@ -488,6 +488,9 @@
     },
     "530": {
       "es": "Repeat of previous"
+    },
+    "539": {
+      "es": "Reminds me of *la rue* in French (street), although the words are not linked\nThe wheel rolls down the street"
     }
   },
   "difficulty": {
