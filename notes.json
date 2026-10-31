@@ -452,6 +452,18 @@
     },
     "484": {
       "es": "Same root as *join* and *junction*, sharing the same prefix *jun-*"
+    },
+    "494": {
+      "es": "Prefer *cara*\nSimilar sounding to *character*, which is almost like someone's inner *face*"
+    },
+    "495": {
+      "es": "Same root as *quasi* in English"
+    },
+    "496": {
+      "es": "Same root as *juvenile*"
+    },
+    "502": {
+      "es": "Prefer *porcion*"
     }
   },
   "difficulty": {
@@ -1744,6 +1756,45 @@
     },
     "483": {
       "es": 2
+    },
+    "484": {
+      "es": 3
+    },
+    "485": {
+      "es": 1
+    },
+    "487": {
+      "es": 1
+    },
+    "488": {
+      "es": 1
+    },
+    "492": {
+      "es": 1
+    },
+    "493": {
+      "es": 1
+    },
+    "494": {
+      "es": 3
+    },
+    "495": {
+      "es": 2
+    },
+    "496": {
+      "es": 3
+    },
+    "497": {
+      "es": 1
+    },
+    "498": {
+      "es": 1
+    },
+    "501": {
+      "es": 1
+    },
+    "502": {
+      "es": 1
     }
   }
 }
