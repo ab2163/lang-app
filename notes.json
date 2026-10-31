@@ -464,6 +464,15 @@
     },
     "502": {
       "es": "Prefer *porcion*"
+    },
+    "503": {
+      "es": "Same root as *secure*"
+    },
+    "507": {
+      "es": "Well known brand of beer"
+    },
+    "513": {
+      "es": "Same root as *edifice* (large building)"
     }
   },
   "difficulty": {
@@ -1795,6 +1804,24 @@
     },
     "502": {
       "es": 1
+    },
+    "503": {
+      "es": 2
+    },
+    "505": {
+      "es": 1
+    },
+    "506": {
+      "es": 1
+    },
+    "507": {
+      "es": 2
+    },
+    "509": {
+      "es": 1
+    },
+    "513": {
+      "es": 2
     }
   }
 }
