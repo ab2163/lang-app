@@ -40,11 +40,17 @@
   .tag { display:inline-block; margin-left:8px; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); vertical-align:3px; }
   .lang { margin-top:10px; }
   .label { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-bottom:2px; }
-  .diff { border:0; background:transparent; padding:0; width:16px; height:16px; color:#9aa6b2; display:inline-flex; }
+  .diff { border:1.5px solid #d5dde6; background:#f7f9fb; padding:0; width:28px; height:28px; border-radius:999px; color:#6b7785; display:inline-flex; align-items:center; justify-content:center; }
   .diff svg { width:16px; height:16px; }
-  .diff.d1, #diffBtn.d1 { color:#2e7d4f; } #diffBtn.d1 { background:#2e7d4f; color:white; border-color:#2e7d4f; }
-  .diff.d2, #diffBtn.d2 { color:#d97706; } #diffBtn.d2 { background:#d97706; color:white; border-color:#d97706; }
-  .diff.d3, #diffBtn.d3 { color:#b42318; } #diffBtn.d3 { background:#b42318; color:white; border-color:#b42318; }
+  .diff.d1 { color:#1f7a45; background:#e5f6ec; border-color:#8fd0a8; }
+  .diff.d2 { color:#b45309; background:#fff4e5; border-color:#f0c27a; }
+  .diff.d3 { color:#b42318; background:#fdecea; border-color:#f0a8a2; }
+  #diffBtn.d1 { background:#2e7d4f; color:white; border-color:#2e7d4f; }
+  #diffBtn.d2 { background:#d97706; color:white; border-color:#d97706; }
+  #diffBtn.d3 { background:#b42318; color:white; border-color:#b42318; }
+  .tools .icon { width:42px; height:42px; border-radius:12px; background:#fff; }
+  .tools .icon svg { width:22px; height:22px; }
+  #diffBtn svg { width:20px; height:20px; }
   .label.es { color:var(--es); } .label.pt { color:var(--pt); } .label.de { color:var(--de); } .label.hi { color:var(--hi); }
   .word { font-size:18px; line-height:1.35; }
   .forms { display:grid; gap:6px; margin-top:8px; }
@@ -102,12 +108,12 @@
     <button class="toggle" id="hide">Answers</button>
     <button class="toggle" id="rangeBtn">Range</button>
     <button class="toggle" id="notesBtn">Notes</button>
-    <button class="toggle icon" id="diffBtn" title="Difficulty" aria-label="Difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 8v8M17 8v8M4 10v4M20 10v4M7 12h10"/></svg></button>
+    <button class="toggle icon" id="diffBtn" title="Difficulty" aria-label="Difficulty"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 6.5h2.2v11H8zM13.8 6.5H16v11h-2.2zM5.2 9h2.2v6H5.2zM16.6 9h2.2v6h-2.2zM7.2 11.1h9.6v1.8H7.2z"/></svg></button>
     <button class="toggle icon" id="headerBtn" title="Hide header" aria-label="Hide header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </div>
   <div class="tools">
-    <button class="icon" id="loadGithub" type="button" title="Load notes and difficulty" aria-label="Load notes and difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></button>
-    <button class="icon" id="saveGithub" type="button" title="Save notes and difficulty" aria-label="Save notes and difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h8M8 21v-6h8"/></svg></button>
+    <button class="icon" id="loadGithub" type="button" title="Load notes and difficulty" aria-label="Load notes and difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10M8 10l4 4 4-4"/><path d="M5 18h14v2H5z"/></svg></button>
+    <button class="icon" id="saveGithub" type="button" title="Save notes and difficulty" aria-label="Save notes and difficulty"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 3h9.2L20 7.8V21H4V3h2zm1.2 1.6v5.2h8.2V4.6H7.2zM8 13.2h8v6H8v-6zm1.4-7.2h2.2v3.2H9.4V6z"/></svg></button>
   </div>
   <div class="github" id="github">
     <input id="ghToken" type="password" placeholder="Fine-grained token, contents:write on lang-app" autocomplete="off">
@@ -194,7 +200,7 @@ function block(w, code) {
   const raw = noteText(w.n, code);
   const note = esc(raw);
   const lvl = level(w.n, code);
-  return `<div class="lang"><div class="label ${code}"><span>${labels[code]}</span><button type="button" class="diff d${lvl}" data-n="${w.n}" data-lang="${code}" title="Difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 8v8M17 8v8M4 10v4M20 10v4M7 12h10"/></svg></button></div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<div class="note-box"><div class="note-tools"><button type="button" class="fmt" data-wrap="**" title="Bold"><b>B</b></button><button type="button" class="fmt" data-wrap="*" title="Italic"><i>I</i></button></div><textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note. **bold** *italic*">${note}</textarea><div class="note-view">${renderNote(raw)}</div></div></div>`;
+  return `<div class="lang"><div class="label ${code}"><span>${labels[code]}</span><button type="button" class="diff d${lvl}" data-n="${w.n}" data-lang="${code}" title="Difficulty"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 6.5h2.2v11H8zM13.8 6.5H16v11h-2.2zM5.2 9h2.2v6H5.2zM16.6 9h2.2v6h-2.2zM7.2 11.1h9.6v1.8H7.2z"/></svg></button></div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<div class="note-box"><div class="note-tools"><button type="button" class="fmt" data-wrap="**" title="Bold"><b>B</b></button><button type="button" class="fmt" data-wrap="*" title="Italic"><i>I</i></button></div><textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note. **bold** *italic*">${note}</textarea><div class="note-view">${renderNote(raw)}</div></div></div>`;
 }
 function bounds() {
   let a = parseInt(fromN.value, 10);
