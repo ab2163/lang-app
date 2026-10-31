@@ -474,6 +474,9 @@
     "513": {
       "es": "Same root as *edifice* (large building)"
     },
+    "514": {
+      "es": "The first part of the word sounds very similar to *ciudad* (city); be careful in the city!"
+    },
     "521": {
       "es": "Prefer *lengua*"
     },
@@ -482,6 +485,9 @@
     },
     "523": {
       "es": "Sounds like *counter*"
+    },
+    "530": {
+      "es": "Repeat of previous"
     }
   },
   "difficulty": {
@@ -1861,6 +1867,51 @@
     },
     "523": {
       "es": 2
+    },
+    "524": {
+      "es": 2
+    },
+    "525": {
+      "es": 1
+    },
+    "526": {
+      "es": 2
+    },
+    "527": {
+      "es": 1
+    },
+    "528": {
+      "es": 1
+    },
+    "529": {
+      "es": 1
+    },
+    "530": {
+      "es": 1
+    },
+    "531": {
+      "es": 1
+    },
+    "532": {
+      "es": 1
+    },
+    "533": {
+      "es": 3
+    },
+    "534": {
+      "es": 1
+    },
+    "535": {
+      "es": 1
+    },
+    "536": {
+      "es": 1
+    },
+    "537": {
+      "es": 1
+    },
+    "538": {
+      "es": 1
     }
   }
 }
