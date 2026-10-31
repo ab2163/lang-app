@@ -145,7 +145,8 @@ const STORE = "words-hidden-v1";
 const NOTES = "words-notes-v1";
 const NOTES_SHOW = "words-notes-show-v1";
 const DIFF = "words-diff-v1";
-let diff = JSON.parse(localStorage.getItem(DIFF) || "{}");
+const HAS_TOKEN = !!localStorage.getItem("words-github-token-v1");
+let diff = HAS_TOKEN ? JSON.parse(localStorage.getItem(DIFF) || "{}") : {};
 let diffMode = 0;
 function saveDiff() { localStorage.setItem(DIFF, JSON.stringify(diff)); }
 function level(n, code) { return (diff[n] && diff[n][code]) || 0; }
@@ -163,7 +164,7 @@ function setLevel(n, code) {
   saveDiff();
 }
 const hidden = new Set(JSON.parse(localStorage.getItem(STORE) || "[]"));
-let notes = JSON.parse(localStorage.getItem(NOTES) || "{}");
+let notes = HAS_TOKEN ? JSON.parse(localStorage.getItem(NOTES) || "{}") : {};
 let showNotes = localStorage.getItem(NOTES_SHOW) !== "0";
 function saveHidden() { localStorage.setItem(STORE, JSON.stringify([...hidden])); }
 function saveNotes() { localStorage.setItem(NOTES, JSON.stringify(notes)); }
@@ -379,7 +380,7 @@ const ghStatus = document.getElementById("ghStatus");
 if (localStorage.getItem(TOKEN_KEY)) ghToken.value = localStorage.getItem(TOKEN_KEY);
 document.getElementById("saveToken").addEventListener("click", () => {
   const token = ghToken.value.trim();
-  if (!token) { localStorage.removeItem(TOKEN_KEY); ghStatus.textContent = "Token cleared."; return; }
+  if (!token) { localStorage.removeItem(TOKEN_KEY); notes = {}; diff = {}; saveNotes(); saveDiff(); render(); ghStatus.textContent = "Token cleared."; return; }
   localStorage.setItem(TOKEN_KEY, token);
   ghStatus.textContent = "Token remembered.";
 });
