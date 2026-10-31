@@ -156,6 +156,9 @@
     "283": {
       "es": "Same root as *debouch* (to emerge from narrow space)"
     },
+    "285": {
+      "es": "Prefer *feliz*\n*Contento* means *pleased* or *glad*"
+    },
     "286": {
       "es": "Same root as *tristful*"
     },
@@ -178,7 +181,7 @@
       "es": "Note *dormitorio* cannot be used since it specifically means *bedroom*"
     },
     "296": {
-      "es": "Similar to *quatro*; paintings typically have four sides\nSimilar to *pintor* (painter)"
+      "es": "Similar to *quatro*; paintings typically have four sides\nSimilar to *pintor* (painter)\nAlmost sounds similar to *Ace Ventura*"
     },
     "298": {
       "es": "*Suelo* has same root as *soil* and *sole*"
@@ -190,7 +193,7 @@
       "es": "Same root as *vase* (vessel)"
     },
     "302": {
-      "es": "Same root as *tonsure* (ritualistic shaving of head)"
+      "es": "Same root as *tonsure* (ritualistic shaving of head)\nTo remember gender: *las tijeras de la tia* (Grok)"
     },
     "303": {
       "es": "For some reason reminds me of *cesspit*"
@@ -271,7 +274,7 @@
       "es": "Note: this means ordinary (casual) and workplace meetings, not like \"reunion\" in English"
     },
     "349": {
-      "es": "e.g. *El uso del mobil esta prohibido*"
+      "es": "e.g. *El uso del mobil esta prohibido*\nAlso sounds like the Greek drink"
     },
     "351": {
       "es": "e.g. *Llandudno esta lejos*\nFrom Latin *laxus* (wide, loose) from which *relax* derives\n*Lejos* sounds similar to loose"
@@ -1214,7 +1217,190 @@
     "283": {
       "es": 2
     },
+    "284": {
+      "es": 1
+    },
+    "285": {
+      "es": 2
+    },
+    "286": {
+      "es": 2
+    },
+    "287": {
+      "es": 2
+    },
     "288": {
+      "es": 2
+    },
+    "289": {
+      "es": 1
+    },
+    "290": {
+      "es": 3
+    },
+    "291": {
+      "es": 2
+    },
+    "292": {
+      "es": 1
+    },
+    "293": {
+      "es": 1
+    },
+    "294": {
+      "es": 1
+    },
+    "295": {
+      "es": 1
+    },
+    "296": {
+      "es": 2
+    },
+    "297": {
+      "es": 1
+    },
+    "298": {
+      "es": 3
+    },
+    "299": {
+      "es": 3
+    },
+    "300": {
+      "es": 1
+    },
+    "301": {
+      "es": 1
+    },
+    "302": {
+      "es": 3
+    },
+    "303": {
+      "es": 3
+    },
+    "304": {
+      "es": 2
+    },
+    "305": {
+      "es": 2
+    },
+    "306": {
+      "es": 1
+    },
+    "307": {
+      "es": 1
+    },
+    "308": {
+      "es": 1
+    },
+    "309": {
+      "es": 3
+    },
+    "310": {
+      "es": 2
+    },
+    "311": {
+      "es": 3
+    },
+    "312": {
+      "es": 3
+    },
+    "313": {
+      "es": 1
+    },
+    "314": {
+      "es": 1
+    },
+    "315": {
+      "es": 2
+    },
+    "316": {
+      "es": 3
+    },
+    "317": {
+      "es": 3
+    },
+    "318": {
+      "es": 3
+    },
+    "319": {
+      "es": 2
+    },
+    "320": {
+      "es": 1
+    },
+    "321": {
+      "es": 1
+    },
+    "322": {
+      "es": 2
+    },
+    "323": {
+      "es": 3
+    },
+    "325": {
+      "es": 1
+    },
+    "327": {
+      "es": 1
+    },
+    "328": {
+      "es": 2
+    },
+    "329": {
+      "es": 2
+    },
+    "330": {
+      "es": 2
+    },
+    "331": {
+      "es": 1
+    },
+    "332": {
+      "es": 1
+    },
+    "333": {
+      "es": 1
+    },
+    "334": {
+      "es": 1
+    },
+    "335": {
+      "es": 1
+    },
+    "336": {
+      "es": 3
+    },
+    "337": {
+      "es": 1
+    },
+    "338": {
+      "es": 2
+    },
+    "339": {
+      "es": 3
+    },
+    "340": {
+      "es": 2
+    },
+    "341": {
+      "es": 2
+    },
+    "342": {
+      "es": 1
+    },
+    "343": {
+      "es": 1
+    },
+    "344": {
+      "es": 2
+    },
+    "346": {
+      "es": 1
+    },
+    "347": {
+      "es": 1
+    },
+    "349": {
       "es": 2
     }
   }
