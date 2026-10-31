@@ -440,6 +440,18 @@
     },
     "471": {
       "es": "*Esta frio afuera* (it's cold outside)\n*Esta chica es bastante fria* (this girl is slightly cold)"
+    },
+    "478": {
+      "es": "(Grok) think about the word *regal* and imagine unwrapping such a gift box"
+    },
+    "482": {
+      "es": "Rhymes with *juego* (game)"
+    },
+    "483": {
+      "es": "Sounds like *hail-o* (hail is essentially ice from the sky)"
+    },
+    "484": {
+      "es": "Same root as *join* and *junction*, sharing the same prefix *jun-*"
     }
   },
   "difficulty": {
@@ -1711,6 +1723,27 @@
     },
     "472": {
       "es": 1
+    },
+    "474": {
+      "es": 1
+    },
+    "478": {
+      "es": 3
+    },
+    "479": {
+      "es": 1
+    },
+    "480": {
+      "es": 1
+    },
+    "481": {
+      "es": 1
+    },
+    "482": {
+      "es": 3
+    },
+    "483": {
+      "es": 2
     }
   }
 }
