@@ -39,7 +39,12 @@
   .en { font-size:20px; font-weight:700; letter-spacing:-.02em; }
   .tag { display:inline-block; margin-left:8px; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); vertical-align:3px; }
   .lang { margin-top:10px; }
-  .label { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-bottom:2px; }
+  .label { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-bottom:2px; }
+  .diff { border:0; background:transparent; padding:0; width:16px; height:16px; color:#9aa6b2; display:inline-flex; }
+  .diff svg { width:16px; height:16px; }
+  .diff.d1, #diffBtn.d1 { color:#2e7d4f; } #diffBtn.d1 { background:#2e7d4f; color:white; border-color:#2e7d4f; }
+  .diff.d2, #diffBtn.d2 { color:#d97706; } #diffBtn.d2 { background:#d97706; color:white; border-color:#d97706; }
+  .diff.d3, #diffBtn.d3 { color:#b42318; } #diffBtn.d3 { background:#b42318; color:white; border-color:#b42318; }
   .label.es { color:var(--es); } .label.pt { color:var(--pt); } .label.de { color:var(--de); } .label.hi { color:var(--hi); }
   .word { font-size:18px; line-height:1.35; }
   .forms { display:grid; gap:6px; margin-top:8px; }
@@ -97,11 +102,12 @@
     <button class="toggle" id="hide">Answers</button>
     <button class="toggle" id="rangeBtn">Range</button>
     <button class="toggle" id="notesBtn">Notes</button>
+    <button class="toggle icon" id="diffBtn" title="Difficulty" aria-label="Difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 8v8M17 8v8M4 10v4M20 10v4M7 12h10"/></svg></button>
     <button class="toggle icon" id="headerBtn" title="Hide header" aria-label="Hide header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </div>
   <div class="tools">
-    <button id="loadGithub" type="button">Load notes from GitHub</button>
-    <button id="saveGithub" type="button">Save notes to GitHub</button>
+    <button class="icon" id="loadGithub" type="button" title="Load notes and difficulty" aria-label="Load notes and difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></button>
+    <button class="icon" id="saveGithub" type="button" title="Save notes and difficulty" aria-label="Save notes and difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h8M8 21v-6h8"/></svg></button>
   </div>
   <div class="github" id="github">
     <input id="ghToken" type="password" placeholder="Fine-grained token, contents:write on lang-app" autocomplete="off">
@@ -133,6 +139,24 @@ const toN = document.getElementById("toN");
 const STORE = "words-hidden-v1";
 const NOTES = "words-notes-v1";
 const NOTES_SHOW = "words-notes-show-v1";
+const DIFF = "words-diff-v1";
+let diff = JSON.parse(localStorage.getItem(DIFF) || "{}");
+let diffMode = 0;
+function saveDiff() { localStorage.setItem(DIFF, JSON.stringify(diff)); }
+function level(n, code) { return (diff[n] && diff[n][code]) || 0; }
+function effective(w) {
+  if (lang !== "all") return level(w.n, lang);
+  return Math.max(level(w.n, "es"), level(w.n, "pt"), level(w.n, "de"), level(w.n, "hi"));
+}
+function setLevel(n, code) {
+  const key = String(n);
+  if (!diff[key]) diff[key] = {};
+  const next = (level(n, code) + 1) % 4;
+  if (next) diff[key][code] = next;
+  else delete diff[key][code];
+  if (!Object.keys(diff[key]).length) delete diff[key];
+  saveDiff();
+}
 const hidden = new Set(JSON.parse(localStorage.getItem(STORE) || "[]"));
 let notes = JSON.parse(localStorage.getItem(NOTES) || "{}");
 let showNotes = localStorage.getItem(NOTES_SHOW) !== "0";
@@ -169,7 +193,8 @@ function renderNote(raw) {
 function block(w, code) {
   const raw = noteText(w.n, code);
   const note = esc(raw);
-  return `<div class="lang"><div class="label ${code}">${labels[code]}</div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<div class="note-box"><div class="note-tools"><button type="button" class="fmt" data-wrap="**" title="Bold"><b>B</b></button><button type="button" class="fmt" data-wrap="*" title="Italic"><i>I</i></button></div><textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note. **bold** *italic*">${note}</textarea><div class="note-view">${renderNote(raw)}</div></div></div>`;
+  const lvl = level(w.n, code);
+  return `<div class="lang"><div class="label ${code}"><span>${labels[code]}</span><button type="button" class="diff d${lvl}" data-n="${w.n}" data-lang="${code}" title="Difficulty">${bell}</button></div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<div class="note-box"><div class="note-tools"><button type="button" class="fmt" data-wrap="**" title="Bold"><b>B</b></button><button type="button" class="fmt" data-wrap="*" title="Italic"><i>I</i></button></div><textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note. **bold** *italic*">${note}</textarea><div class="note-view">${renderNote(raw)}</div></div></div>`;
 }
 function bounds() {
   let a = parseInt(fromN.value, 10);
@@ -188,6 +213,7 @@ function render() {
     if (rangeMode && (w.n < a || w.n > b)) return false;
     if (verbMode === 1 && !w.verb) return false;
     if (verbMode === 2 && w.verb) return false;
+    if (diffMode && effective(w) !== diffMode) return false;
     if (!query) return true;
     if (String(w.n) === query) return true;
     const noteBits = notes[w.n] ? Object.values(notes[w.n]).join(" ") : "";
@@ -263,7 +289,19 @@ document.getElementById("notesBtn").addEventListener("click", () => {
   localStorage.setItem(NOTES_SHOW, showNotes ? "1" : "0");
   applyNotesVisibility();
 });
+document.getElementById("diffBtn").addEventListener("click", e => {
+  diffMode = (diffMode + 1) % 4;
+  e.currentTarget.classList.remove("d1", "d2", "d3");
+  if (diffMode) e.currentTarget.classList.add("d" + diffMode);
+  render();
+});
 list.addEventListener("click", e => {
+  if (e.target.closest(".diff")) {
+    const btn = e.target.closest(".diff");
+    setLevel(btn.dataset.n, btn.dataset.lang);
+    render();
+    return;
+  }
   if (e.target.classList.contains("note") || e.target.closest(".note-box")) return;
   const hideBtn = e.target.closest(".hide-word");
   if (hideBtn) {
@@ -288,6 +326,18 @@ list.addEventListener("click", e => {
 });
 q.addEventListener("input", render);
 applyNotesVisibility();
+function applyStudyData(data) {
+  if (!data || typeof data !== "object") return;
+  if (data.notes || data.difficulty) {
+    notes = data.notes || {};
+    diff = data.difficulty || {};
+  } else {
+    notes = data;
+  }
+  saveNotes();
+  saveDiff();
+  render();
+}
 async function loadNotesFromGitHub(manual) {
   try {
     const r = await fetch("notes.json?t=" + Date.now(), { cache: "no-store" });
@@ -295,17 +345,45 @@ async function loadNotesFromGitHub(manual) {
       if (manual) ghStatus.textContent = "No notes.json on GitHub yet.";
       return;
     }
-    const data = await r.json();
-    if (!data || typeof data !== "object") return;
-    notes = data;
-    saveNotes();
-    render();
-    const n = Object.keys(notes).length;
-    
+    applyStudyData(await r.json());
   } catch (err) {
-    if (manual) ghStatus.textContent = "Could not load notes from GitHub.";
+    if (manual) ghStatus.textContent = "Could not load from GitHub.";
   }
 }
+const GH = { owner: "ab2163", repo: "lang-app", branch: "main", path: "notes.json" };
+const TOKEN_KEY = "words-github-token-v1";
+const ghToken = document.getElementById("ghToken");
+const ghStatus = document.getElementById("ghStatus");
+if (localStorage.getItem(TOKEN_KEY)) ghToken.value = localStorage.getItem(TOKEN_KEY);
+document.getElementById("saveToken").addEventListener("click", () => {
+  const token = ghToken.value.trim();
+  if (!token) { localStorage.removeItem(TOKEN_KEY); ghStatus.textContent = "Token cleared."; return; }
+  localStorage.setItem(TOKEN_KEY, token);
+  ghStatus.textContent = "Token remembered.";
+});
+function toBase64(s) { return btoa(unescape(encodeURIComponent(s))); }
+document.getElementById("saveGithub").addEventListener("click", async () => {
+  const token = ghToken.value.trim();
+  if (!token) { ghStatus.textContent = "Add a token first."; return; }
+  ghStatus.textContent = "Saving…";
+  const headers = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+  const url = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}?ref=${GH.branch}`;
+  try {
+    const existing = await fetch(url, { headers });
+    let sha = "";
+    if (existing.ok) sha = (await existing.json()).sha || "";
+    else if (existing.status !== 404) throw new Error("Could not read notes.json (" + existing.status + ")");
+    const body = { message: "Update notes and difficulty", content: toBase64(JSON.stringify({ notes, difficulty: diff }, null, 2) + "\n"), branch: GH.branch };
+    if (sha) body.sha = sha;
+    const put = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`, {
+      method: "PUT", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(body)
+    });
+    if (!put.ok) throw new Error((await put.text()).slice(0, 180) || ("Save failed (" + put.status + ")"));
+    ghStatus.textContent = "Saved.";
+  } catch (err) {
+    ghStatus.textContent = err.message || "Save failed.";
+  }
+});
 document.getElementById("loadGithub").addEventListener("click", () => loadNotesFromGitHub(true));
 const HEADER_KEY = "words-header-show-v1";
 let showHeader = localStorage.getItem(HEADER_KEY) !== "0";
