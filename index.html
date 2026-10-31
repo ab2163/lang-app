@@ -194,7 +194,7 @@ function block(w, code) {
   const raw = noteText(w.n, code);
   const note = esc(raw);
   const lvl = level(w.n, code);
-  return `<div class="lang"><div class="label ${code}"><span>${labels[code]}</span><button type="button" class="diff d${lvl}" data-n="${w.n}" data-lang="${code}" title="Difficulty">${bell}</button></div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<div class="note-box"><div class="note-tools"><button type="button" class="fmt" data-wrap="**" title="Bold"><b>B</b></button><button type="button" class="fmt" data-wrap="*" title="Italic"><i>I</i></button></div><textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note. **bold** *italic*">${note}</textarea><div class="note-view">${renderNote(raw)}</div></div></div>`;
+  return `<div class="lang"><div class="label ${code}"><span>${labels[code]}</span><button type="button" class="diff d${lvl}" data-n="${w.n}" data-lang="${code}" title="Difficulty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 8v8M17 8v8M4 10v4M20 10v4M7 12h10"/></svg></button></div><div class="word">${w[code] || "—"}</div>${forms(w, code)}<div class="note-box"><div class="note-tools"><button type="button" class="fmt" data-wrap="**" title="Bold"><b>B</b></button><button type="button" class="fmt" data-wrap="*" title="Italic"><i>I</i></button></div><textarea class="note" data-n="${w.n}" data-lang="${code}" rows="2" placeholder="${labels[code]} note. **bold** *italic*">${note}</textarea><div class="note-view">${renderNote(raw)}</div></div></div>`;
 }
 function bounds() {
   let a = parseInt(fromN.value, 10);
